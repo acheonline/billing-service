@@ -1,0 +1,17 @@
+billing-service:
+  transport:
+    topics:
+      account:
+        create: ${ACCOUNT_CREATE_TOPIC:create}
+
+spring:
+  kafka:
+    consumer:
+      client-id: ${KAFKA_CLIENT_ID:billing-service}
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: billing-service-group
+      auto-offset-reset: earliest
+      security.protocol: ${KAFKA_PROTOCOL:PLAINTEXT}
+logging:
+  level:
+    org.apache.kafka.*: WARN

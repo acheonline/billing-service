@@ -19,10 +19,10 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public UserAccountInfo getAccountIdByClientId(String id) throws UserAccountInfoRepositoryException{
+    public UserAccountInfo getAccountIdByClientId(String id) throws UserAccountInfoRepositoryException {
         var userAccountInfo = userStorage.get(id);
         if (userAccountInfo == null) {
-            throw new UserAccountInfoRepositoryException("В базе нет такого clientId: '" + id + "'.");
+            throw new UserAccountInfoRepositoryException("В базе нет такого clientId: '" + id + "'");
         }
         log.info("Аккаунт '{}' для пользователя '{}' найден", userAccountInfo.getAccountNo(), id);
         return userAccountInfo;
@@ -31,9 +31,33 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public String createAccountIdByClientId(String clientId) {
         var accountId = UUID.randomUUID();
-        var userAccountInfo = new UserAccountInfo(clientId, accountId.toString(), 0.00d);
-        log.info("Аккаунт '{}' для пользователя '{}' создан.", accountId, clientId);
+        var userAccountInfo = new UserAccountInfo(clientId, accountId.toString(), "0");
+        log.info("Аккаунт '{}' для пользователя '{}' создан", accountId, clientId);
         userStorage.put(clientId, userAccountInfo);
         return accountId.toString();
+    }
+
+    @Override
+    public void decreaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException {
+        var userAccountInfo = userStorage.get(accountId);
+        var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
+        var am = Double.valueOf(amount);
+        if ((clientAmount - am) < 0) {
+            throw new UserAccountInfoRepositoryException("На счете '" + accountId + "' не достаточно средств для операции");
+        } else {
+            clientAmount -= am;
+            userAccountInfo.setAmount(String.valueOf(clientAmount));
+            userStorage.put(accountId, userAccountInfo);
+        }
+    }
+
+    @Override
+    public void increaseAccountByAccountId(String accountId, String amount) {
+        var userAccountInfo = userStorage.get(accountId);
+        var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
+        var am = Double.valueOf(amount);
+        clientAmount += am;
+        userAccountInfo.setAmount(String.valueOf(clientAmount));
+        userStorage.put(accountId, userAccountInfo);
     }
 }

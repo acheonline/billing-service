@@ -2,7 +2,6 @@ package ru.achernayvskiy0n.billingservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.achernayvskiy0n.billingservice.domain.ApiResponse;
 import ru.achernayvskiy0n.billingservice.persistence.InMemoryUserRepository;
@@ -30,7 +29,32 @@ public class BillingServiceController {
     }
 
     @PostMapping("/create/{id}")
-    ResponseEntity<String> create(@PathVariable String id) {
-        return ResponseEntity.ok(repository.createAccountIdByClientId(id));
+    ApiResponse create(@PathVariable String id) {
+        var acc = repository.createAccountIdByClientId(id);
+        return ApiResponse.builder()
+                .message(acc)
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .build();
+    }
+
+    @PatchMapping("/decrease/{id}/{amount}")
+    ApiResponse decreaseAccount(@PathVariable("id") String id, @PathVariable("amount") String amount) throws UserAccountInfoRepositoryException {
+        repository.decreaseAccountByAccountId(id, amount);
+        return ApiResponse.builder()
+                .message("Сумма счета: '" + id + "' обновлена")
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .build();
+    }
+
+    @PatchMapping("/increase/{id}/{amount}")
+    ApiResponse increaseAccount(@PathVariable("id") String id, @PathVariable("amount") String amount) {
+        repository.increaseAccountByAccountId(id, amount);
+        return ApiResponse.builder()
+                .message("Сумма счета: '" + id + "' обновлена")
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .build();
     }
 }

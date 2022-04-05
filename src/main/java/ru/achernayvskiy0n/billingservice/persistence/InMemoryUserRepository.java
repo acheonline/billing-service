@@ -19,25 +19,20 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public UserAccountInfo getAccountIdByClientId(String id) {
+    public UserAccountInfo getAccountIdByClientId(String id) throws UserAccountInfoRepositoryException{
         var userAccountInfo = userStorage.get(id);
-        try {
-            if (userAccountInfo == null) {
-                throw new UserAccountInfoRepositoryException("В базе нет такого clientId: " + id);
-            }
-            log.info("Аккаунт {} для пользователя {} найден", userAccountInfo.getAccountNo(), id);
-            return userAccountInfo;
-        } catch (UserAccountInfoRepositoryException e) {
-            log.error(e.getMessage());
+        if (userAccountInfo == null) {
+            throw new UserAccountInfoRepositoryException("В базе нет такого clientId: '" + id + "'.");
         }
-        return null;
+        log.info("Аккаунт '{}' для пользователя '{}' найден", userAccountInfo.getAccountNo(), id);
+        return userAccountInfo;
     }
 
     @Override
     public String createAccountIdByClientId(String clientId) {
         var accountId = UUID.randomUUID();
         var userAccountInfo = new UserAccountInfo(clientId, accountId.toString(), 0.00d);
-        log.info("Аккаунт {} для пользователя {} создан.", accountId, clientId);
+        log.info("Аккаунт '{}' для пользователя '{}' создан.", accountId, clientId);
         userStorage.put(clientId, userAccountInfo);
         return accountId.toString();
     }

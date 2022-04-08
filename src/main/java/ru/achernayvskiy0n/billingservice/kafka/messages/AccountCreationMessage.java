@@ -1,16 +1,14 @@
 package ru.achernayvskiy0n.billingservice.kafka.messages;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
  */
 @Data
 @Accessors
-@RequiredArgsConstructor
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountCreationMessage {
-    private final String username;
+    private String username;
 }

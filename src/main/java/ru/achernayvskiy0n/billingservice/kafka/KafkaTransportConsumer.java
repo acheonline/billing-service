@@ -3,6 +3,7 @@ package ru.achernayvskiy0n.billingservice.kafka;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import ru.achernayvskiy0n.billingservice.persistence.InMemoryUserRepository;
  */
 @Slf4j
 @Component
+@ConditionalOnProperty(prefix = "spring", name = "profiles.active", havingValue = "prod")
 @RequiredArgsConstructor
 public class KafkaTransportConsumer implements TransportConsumer {
 

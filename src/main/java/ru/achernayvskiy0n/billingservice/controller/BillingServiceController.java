@@ -29,31 +29,34 @@ public class BillingServiceController {
     }
 
     @PostMapping("/create/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
     ApiResponse create(@PathVariable String id) {
         var acc = repository.createAccountIdByClientId(id);
         return ApiResponse.builder()
                 .message(acc)
-                .status(HttpStatus.OK.value())
+                .status(HttpStatus.CREATED.value())
                 .success(true)
                 .build();
     }
 
-    @PatchMapping("/decrease/{id}/{amount}")
+    @PatchMapping("/{id}/decrease/{amount}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     ApiResponse decreaseAccount(@PathVariable("id") String id, @PathVariable("amount") String amount) throws UserAccountInfoRepositoryException {
         repository.decreaseAccountByAccountId(id, amount);
         return ApiResponse.builder()
                 .message("Сумма счета: '" + id + "' обновлена")
-                .status(HttpStatus.OK.value())
+                .status(HttpStatus.ACCEPTED.value())
                 .success(true)
                 .build();
     }
 
-    @PatchMapping("/increase/{id}/{amount}")
-    ApiResponse increaseAccount(@PathVariable("id") String id, @PathVariable("amount") String amount) {
+    @PatchMapping("/{id}/increase/{amount}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    ApiResponse increaseAccount(@PathVariable("id") String id, @PathVariable("amount") String amount) throws UserAccountInfoRepositoryException {
         repository.increaseAccountByAccountId(id, amount);
         return ApiResponse.builder()
                 .message("Сумма счета: '" + id + "' обновлена")
-                .status(HttpStatus.OK.value())
+                .status(HttpStatus.ACCEPTED.value())
                 .success(true)
                 .build();
     }

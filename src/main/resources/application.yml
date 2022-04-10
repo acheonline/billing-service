@@ -12,6 +12,8 @@ spring:
       group-id: billing-service-group
       auto-offset-reset: earliest
       security.protocol: ${KAFKA_PROTOCOL:PLAINTEXT}
+  profiles:
+    active: ${SPRING_PROFILE:prod}
 logging:
   level:
     org.apache.kafka.*: WARN

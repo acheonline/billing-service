@@ -11,5 +11,5 @@ public interface UserRepository {
 
     void decreaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException;
 
-    void increaseAccountByAccountId(String accountId, String amount);
+    void increaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException;
 }

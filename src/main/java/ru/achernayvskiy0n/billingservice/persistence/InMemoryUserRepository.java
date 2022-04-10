@@ -40,24 +40,32 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public void decreaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException {
         var userAccountInfo = userStorage.get(accountId);
-        var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
-        var am = Double.valueOf(amount);
-        if ((clientAmount - am) < 0) {
-            throw new UserAccountInfoRepositoryException("На счете '" + accountId + "' не достаточно средств для операции");
+        if (userAccountInfo == null) {
+            throw new UserAccountInfoRepositoryException("Пользователь с Id: '" + accountId + "' не найден.");
         } else {
-            clientAmount -= am;
-            userAccountInfo.setAmount(String.valueOf(clientAmount));
-            userStorage.put(accountId, userAccountInfo);
+            var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
+            var am = Double.valueOf(amount);
+            if ((clientAmount - am) < 0) {
+                throw new UserAccountInfoRepositoryException("На счете '" + accountId + "' не достаточно средств для операции");
+            } else {
+                clientAmount -= am;
+                userAccountInfo.setAmount(String.valueOf(clientAmount));
+                userStorage.put(accountId, userAccountInfo);
+            }
         }
     }
 
     @Override
-    public void increaseAccountByAccountId(String accountId, String amount) {
+    public void increaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException {
         var userAccountInfo = userStorage.get(accountId);
-        var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
-        var am = Double.valueOf(amount);
-        clientAmount += am;
-        userAccountInfo.setAmount(String.valueOf(clientAmount));
-        userStorage.put(accountId, userAccountInfo);
+        if (userAccountInfo == null) {
+            throw new UserAccountInfoRepositoryException("Пользователь с Id: '" + accountId + "' не найден.");
+        } else {
+            var clientAmount = Double.parseDouble(userAccountInfo.getAmount());
+            var am = Double.valueOf(amount);
+            clientAmount += am;
+            userAccountInfo.setAmount(String.valueOf(clientAmount));
+            userStorage.put(accountId, userAccountInfo);
+        }
     }
 }

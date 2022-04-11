@@ -3,6 +3,9 @@ billing-service:
     topics:
       account:
         create: ${ACCOUNT_CREATE_TOPIC:create}
+      order:
+        request: ${ORDER_REQUEST_TOPIC:request}
+        response: ${ORDER_RESPONSE_TOPIC:response}
 
 spring:
   kafka:
@@ -11,6 +14,11 @@ spring:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
       group-id: billing-service-group
       auto-offset-reset: earliest
+      security.protocol: ${KAFKA_PROTOCOL:PLAINTEXT}
+    producer:
+      client-id: ${KAFKA_CLIENT_ID:billing-service}
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      acks: all
       security.protocol: ${KAFKA_PROTOCOL:PLAINTEXT}
   profiles:
     active: ${SPRING_PROFILE:prod}

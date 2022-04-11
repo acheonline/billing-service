@@ -2,6 +2,7 @@ package ru.achernayvskiy0n.billingservice.persistence;
 
 
 import ru.achernayvskiy0n.billingservice.client.UserAccountInfo;
+import ru.achernayvskiy0n.billingservice.kafka.messages.ResponseMessage;
 
 public interface UserRepository {
 
@@ -9,7 +10,5 @@ public interface UserRepository {
 
     String createAccountIdByClientId(String id);
 
-    void decreaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException;
-
-    void increaseAccountByAccountId(String accountId, String amount) throws UserAccountInfoRepositoryException;
+    void modifyAccountByAccountId(String accountId, UserAccountInfo userAccountInfo);
 }

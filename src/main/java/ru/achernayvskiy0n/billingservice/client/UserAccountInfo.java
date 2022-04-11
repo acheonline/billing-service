@@ -11,5 +11,5 @@ public class UserAccountInfo {
 
   private String clientId;
   private String accountNo;
-  private String amount;
+  private Double amount;
 }

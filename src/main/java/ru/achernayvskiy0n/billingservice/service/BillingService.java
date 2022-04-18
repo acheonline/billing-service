@@ -31,12 +31,12 @@ public class BillingService {
             return createResponseMessage(errorPayload, userId, ResponseMessage.ApiResponseStatus.INTERNAL_SERVER_ERROR);
         } else {
             var clientAmount = userAccountInfo.getAmount();
-            if ((clientAmount + amount) < 0) {
+            if ((clientAmount - amount) < 0) {
                 var errorPayload = "На счете '" + userId + "' не достаточно средств для операции";
                 log.error(errorPayload);
                 return createResponseMessage(errorPayload, userId, ResponseMessage.ApiResponseStatus.INTERNAL_SERVER_ERROR);
             } else {
-                clientAmount += amount;
+                clientAmount -= amount;
                 userAccountInfo.setAmount(clientAmount);
                 repository.modifyAccountByAccountId(userId, userAccountInfo);
                 var successPayload = "Счет пользователя: '" + userId + "' успешно модифицирован.";
